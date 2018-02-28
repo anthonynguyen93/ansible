@@ -1,6 +1,8 @@
-- name: Hello World Sample
-  hosts: all
-  tasks:
-    - name: Hello Message
-      debug:
-        msg: "Hello World!"
+# FS_CHECK
+# Anthony Nguyen
+
+- name: Check FS Usage
+shell: du -hx {{ gso_unix_filesystem}} --max-depth=1 | sort -rn | while read Gsize Gdir; do echo $Gsize $Gdir $(df -hTP $Gdir) | sed 's/Filesystem Type Size Used Avail Use&//' ;done | awk "{printf(%-10s	%15s \n", $1, $2}}'
+register: fs_du_out
+ignore_errors: yes
+
