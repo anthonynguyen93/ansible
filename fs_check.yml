@@ -4,10 +4,5 @@
 - name: Check FS Usage
 	hosts: all
 	shell: du -hx {{ gso_unix_filesystem}} --max-depth=1 | sort -rn | while read Gsize Gdir; do echo $Gsize $Gdir $(df -hTP $Gdir) | sed 's/Filesystem Type Size Used Avail Use&//' ;done | awk "{printf(%-10s	%15s \n", $1, $2}}'
-	register: fs_du_out
-	ignore_errors: yes
-	tasks: 
-	- name: FS_USAGE_OUT
-	debug: 
-	msg: fs_du_out 
+	register: fs_du_out 
 
