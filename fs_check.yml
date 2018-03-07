@@ -7,6 +7,6 @@
     - name: Run DU
       shell: /usr/bin/du -sh / 2>/dev/null
       register: du
-      - dubug: 
+      - debug: 
         msg:
-	- "{{du.stdout_lines}}"
+        - "{{du.stdout_lines}}"
