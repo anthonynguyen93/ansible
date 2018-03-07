@@ -1,6 +1,9 @@
- hosts: all
+# FS_CHECK
+# Anthony Nguyen
+  hosts: all
+
  - block:
     - name: Run DU
       shell: cd /; /usr/bin/du -sh *
       register: du
-    - debug: msg='{{du.stdout_lines}}'
+    - debug: msg= '{{du.stdout_lines}}'
