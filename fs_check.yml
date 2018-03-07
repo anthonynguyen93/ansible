@@ -8,7 +8,7 @@
   tasks:
 
     - name: Run DU
-      command: whoami; cd /; /usr/bin/du -sh * 2>/dev/null;
+      shell: whoami; cd /; /usr/bin/du -sh * 2>/dev/null;
       register: du
       ignore_errors: yes
     - debug: msg='{{du.stdout_lines}}'
