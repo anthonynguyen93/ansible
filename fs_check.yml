@@ -1,5 +1,4 @@
  hosts: all
- tasks:
  - block:
     - name: Run DU
       shell: cd /; /usr/bin/du -sh *
