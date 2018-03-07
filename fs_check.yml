@@ -7,7 +7,7 @@
   tasks:
 
     - name: Run DU
-      shell: /usr/bin/du -sh /* 2>/dev/null;
+      shell: /usr/bin/du -sh /* 2>/dev/null | awk '{print $1 " /" $2}';
       register: du
       ignore_errors: yes
     - debug: msg="{{du.stdout_lines}}"
