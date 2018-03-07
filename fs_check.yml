@@ -1,6 +1,5 @@
 # FS_CHECK
 # Anthony Nguyen
-
 - name: Check FS Usage
   hosts: all
   become_user: root
