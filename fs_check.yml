@@ -1,9 +1,14 @@
 # FS_CHECK
 # Anthony Nguyen
-  hosts: all
 
- - block:
+- name: Check FS Usage
+  hosts: all
+  tasks:
     - name: Run DU
-      shell: cd /; /usr/bin/du -sh *
+      shell: /usr/bin/du
       register: du
-    - debug: msg= '{{du.stdout_lines}}'
+      
+    - name: print DU
+      debug: 
+        msg:
+        - "{{du.stdout_lines}}"
