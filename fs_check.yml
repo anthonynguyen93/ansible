@@ -1,6 +1,5 @@
  hosts: all
  tasks:
-- name: Check FS Usage
  - block:
     - name: Run DU
       shell: cd /; /usr/bin/du -sh *
