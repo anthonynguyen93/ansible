@@ -4,10 +4,9 @@
 - name: Check FS Usage
   hosts: all
   tasks:
-   -block:
     - name: Run DU
       shell: /usr/bin/du -sh / 2>/dev/null
       register: du
-      - debug: 
+      debug: 
         msg:
         - "{{du.stdout_lines}}"
