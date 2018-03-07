@@ -3,8 +3,8 @@
 
 - name: Check FS Usage
   hosts: all
-
-
+  become_user: root
+  become: true
   tasks:
     - name: Run DU
       shell: cd /; /usr/bin/du -sh * 2>/dev/null;
