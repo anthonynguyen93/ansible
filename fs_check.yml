@@ -11,4 +11,3 @@
       register: du
       ignore_errors: yes
     - debug: msg="{{du.stdout_lines}}"
-	
