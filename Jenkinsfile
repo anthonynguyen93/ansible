@@ -4,9 +4,11 @@ node {
   stage ('Checkout') {
     sh 'git clone https://github.com/anthonynguyen93/ansible.git'
     stage 'Build'
-    echo "Build Stage"
+    echo "Build stage"
     stage 'Test'
-    echo "Test Stage"
+    error("Build failed because autosys agent PID was not successfully killed..")
+    stage 'Deploy'
+    echo "Pull request code here"
   }
 }
 
