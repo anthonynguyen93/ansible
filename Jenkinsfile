@@ -1,9 +1,9 @@
-#!/bin/bash
+#!groovy
 
 node {
   stage 'init'{
-    cleanWs()
-}
+  cleanWs()
+  }
   stage 'Checkout' {
     sh 'git clone https://github.com/anthonynguyen93/ansible.git'
     }
@@ -14,7 +14,8 @@ node {
     sh 'ansible-playbook --syntax-check ansible_playbook.yml'
     // error("Build failed because autosys agent PID was not successfully killed..")
     }
-    stage 'Deploy'
+    stage 'Deploy'{
     echo "Pull request code here"
+    }
 }
 
