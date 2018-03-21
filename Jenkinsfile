@@ -2,8 +2,8 @@
 
 node {
   stage ('Checkout') {
-    cd /tmp/jenkins_build
-    git clone https://github.com/anthonynguyen93/ansible.git
+    sh cd /tmp/jenkins_build
+    sh git clone https://github.com/anthonynguyen93/ansible.git
     stage 'Build'
     echo "Build Stage"
     stage 'Test'
