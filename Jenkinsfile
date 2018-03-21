@@ -1,7 +1,7 @@
 #!groovy
 
 node {
-  stage 'init'{
+  stage ('init'){
   cleanWs()
   }
 /*  stage 'Checkout' {
