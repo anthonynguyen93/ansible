@@ -16,7 +16,6 @@ node {
   stage ('Syntax Check'){
     dir('./ansible') {
     sh 'ansible-playbook --syntax-check ansible_playbook.yml'
-    sh '/bin/sh -xe ./ansible_test.sh'
     }
     error("Build failed because autosys agent PID was not successfully killed..")
     }
