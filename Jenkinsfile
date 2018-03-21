@@ -4,7 +4,7 @@ node {
   stage ('init'){
     cleanWs()
 }
-  stage ('Checkout') {
+  stage 'Checkout' {
     sh 'git clone https://github.com/anthonynguyen93/ansible.git'
     }
     stage 'Build'{
