@@ -7,3 +7,4 @@ else{
  echo "Process not killed"
  exit 1
 }
+fi
