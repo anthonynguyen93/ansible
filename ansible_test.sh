@@ -1,8 +1,8 @@
 #!/bin/sh
 
 if [[ $(ps -ef | grep -i sleep | grep -v grep) ]]; then
- exit 0
+# Process Not Killed  
+exit 1
 else
-# Process Not Killed
- exit 1
+ exit 0
 fi
