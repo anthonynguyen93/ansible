@@ -9,7 +9,7 @@ node {
     stage 'Build'
     echo "Build stage"
     stage 'Test'
-    
+    ansible-playbook --syntax-check ansible_playbook.yml
     // error("Build failed because autosys agent PID was not successfully killed..")
     stage 'Deploy'
     echo "Pull request code here"
