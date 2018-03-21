@@ -2,11 +2,12 @@
 
 node {
   stage ('Checkout') {
-    svn 'https://svn.mycorp/trunk/'
+    cd /tmp/jenkins_build
+    git clone https://github.com/anthonynguyen93/ansible.git
     stage 'Build'
-    sh 'make all'
+    echo "Build Stage"
     stage 'Test'
-    sh 'make test'
+    echo "Test Stage"
   }
 }
 
