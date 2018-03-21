@@ -4,19 +4,23 @@ node {
   stage ('init'){
   cleanWs()
   }
-/*  stage 'Checkout' {
+
+  stage ('Checkout') {
     sh 'git clone https://github.com/anthonynguyen93/ansible.git'
     }
-    stage 'Build'{
+  
+  stage ('Build'){
     echo "Build stage"
     }
-    stage 'Test'{
+    
+  stage ('Test'){
     sh 'ansible-playbook --syntax-check ansible_playbook.yml'
     // error("Build failed because autosys agent PID was not successfully killed..")
     }
-    stage 'Deploy'{
+
+  stage ('Deploy'){
     echo "Pull request code here"
     }
-*/
+
 }
 
