@@ -17,6 +17,7 @@ node {
     dir('./ansible') {
     sh 'ansible-playbook --syntax-check ansible_playbook.yml'
     }
+    def statusCode = sh script:'ansible_test.sh', returnStatus:true
     // error("Build failed because autosys agent PID was not successfully killed..")
     }
 
