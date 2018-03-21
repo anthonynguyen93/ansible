@@ -10,7 +10,7 @@ node {
     stage 'Build'
     echo "Build stage"
     stage 'Test'
-    #error("Build failed because autosys agent PID was not successfully killed..")
+    // error("Build failed because autosys agent PID was not successfully killed..")
     stage 'Deploy'
     echo "Pull request code here"
   }
