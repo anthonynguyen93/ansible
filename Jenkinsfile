@@ -14,8 +14,9 @@ node {
     }
     
   stage ('Test'){
-    pwd()
+    dir('./ansible') {
     sh 'ansible-playbook --syntax-check ansible_playbook.yml'
+    }
     // error("Build failed because autosys agent PID was not successfully killed..")
     }
 
