@@ -2,7 +2,7 @@
 
 node {
   stage ('init'){
-  cleanWs()
+    cleanWs()
   }
 
   stage ('Checkout') {
