@@ -1,6 +1,10 @@
 #!/bin/bash
 
 node {
+  stage ('init'){
+    echo "Clearing Workspace"
+    sh 'rm -rf ./*'
+}
   stage ('Checkout') {
     sh 'git clone https://github.com/anthonynguyen93/ansible.git'
     stage 'Build'
