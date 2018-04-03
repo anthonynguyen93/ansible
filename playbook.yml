@@ -20,11 +20,11 @@
          msg: "{{du_top.stdout_lines}}"
   - block:
     - name: GZIP Compression Function
-      shell: gzip -r {{unix_compress}}
+      shell: gzip -r {{unix_compress_directory}}
       ignore_errors: yes
     - name: Display GZIP Compression
-      shell: /usr/bin/df -h {{unix_compress}} | head -n 2
+      shell: /usr/bin/df -h {{unix_compress_directory}} | head -n 2
       register: gzip_filesystem_changed
     - debug:
         msg: "{{gzip_filesystem_changed.stdout_lines}}"
-    when: '{{unix_compress|length > 1}}'
+    when: 'unix_compress_directory|length > 1'
