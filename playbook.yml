@@ -1,0 +1,30 @@
+#Anthony Nguyen
+- name: Check FS Usage
+  hosts: all
+  become_user: root
+  become: true
+  tasks:
+  - block:
+    - name: Analyzing TOP Disk Usage
+      shell: /usr/bin/du -sh /* 2>/dev/null | sort -rn | awk '{print $1 " " $2}'
+      register: du
+      ignore_errors: yes
+    - debug:
+        msg: "{{du.stdout_lines}}"
+  - block: 
+    - name: Analyzing and Suggesting TOP 3 Highest FileSystem Consumers To Compress
+      shell: /usr/bin/du -sh /* 2>/dev/null | sort -rn | head -n 3 | awk '{print $1 " " $2}'
+      register: du_top
+      ignore_errors: yes
+    - debug:
+         msg: "{{du_top.stdout_lines}}"
+  - block:
+    - name: GZIP Compression Function
+      shell: gzip -r {{unix_compress}}
+      ignore_errors: yes
+    - name: Display GZIP Compression
+      shell: /usr/bin/df -h {{unix_compress}} | head -n 2
+      register: gzip_filesystem_changed
+    - debug:
+        msg: "{{gzip_filesystem_changed.stdout_lines}}"
+    when: '{{unix_compress|length > 1}}'
