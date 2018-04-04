@@ -1,0 +1,35 @@
+#Highest Memory / CPU Utilization
+- name: Check Memory / CPU Utilization
+  hosts: all
+  become_user: root
+  become: true
+  tasks:
+  - block:
+    - name: Analyzing CPU Usage
+      shell: ps -eo user,pid,ppid,cmd,%cpu --sort=-%cpu | head -n 10
+      register: cpu
+    - debug:
+        msg: "{{cpu.stdout_lines}}"
+  - block:
+    - name: Analyzing Memory Usage
+      shell: ps -eo user,pid,ppid,cmd,%mem --sort=-%mem | head -n 10
+      register: mem
+    - debug: 
+        msg: "{{mem.stdout_lines}}"
+  - block: 
+    - name: Checking for requested process PID details
+      shell: ps -ef | grep -v grep | grep -i {{pid_info}}
+      register: pid
+    - debug: 
+        msg: "{{pid.stdout_lines}}"
+    when: 'pid_info|length > 1'
+    rescue:
+      - debug:
+          msg: "Invalid Process ID" 
+  - block: 
+    - name: Checking to kill process PID
+      shell: kill -9 {{kill_pid}} 
+    when: 'kill_pid|length > 1'
+    rescue:
+      - debug:
+          msg: "Invalid PID to kill"
