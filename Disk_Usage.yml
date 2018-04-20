@@ -50,17 +50,19 @@
       shell: find /home/ -iname "*" -atime +60 -type f | grep -v "*gz" | xargs gzip
     rescue:
      - debug:
-         msg: "Unable to complete compression" 
+         msg: "Unable to complete compression"
   - block:
-    - block:
-      - name: Checking User Input For File Deletion..
-        shell: /usr/bin/ls -l {{delete}} | wc -l
-        register: delete_exists
-      - debug:
-          msg: "{{delete_exists.stdout_lines}}"
-    - block: 
-      - name: Perform Delete Operation..
-        file: 
-          path: "{{delete}}"
-          state: absent
-      when: '(delete_exists.stdout_lines > 1)'
+    - name: Cleaning Up Temporary Files
+      shell: gzip -r /tmp/*
+ # - block:
+ #   - name: User Input For File Deletion..
+ #     shell: ls -l {{delete}} | wc -l
+ #     register: delete_exists
+ #   - debug:
+ #         msg: "{{delete_exists.stdout_lines}}"
+ # - block: 
+ #   - name: Perform Delete Operation..
+ #     file: 
+ #       path: "{{delete}}"
+ #       state: absent
+ #   when: '(delete_exists.stdout_lines > 1)'

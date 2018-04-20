@@ -26,8 +26,11 @@
     rescue:
       - debug:
           msg: "Invalid Process ID" 
+  - block:
+    - name: Automatic cleaning top 3 highest consumers
+      shell: ps -eo user,pid,ppid,cmd,%cpu --sort=-%cpu | grep -v root | head -n 4 | awk '{print $2'} | grep -v [A-Z] | xargs kill -9
   - block: 
-    - name: Checking to kill process PID
+    - name: Checking to kill custom user input process PID
       shell: kill -9 {{kill_pid}} 
     when: 'kill_pid|length > 1'
     rescue:
