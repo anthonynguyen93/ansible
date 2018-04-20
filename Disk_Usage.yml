@@ -63,4 +63,4 @@
         file: 
           path: "{{delete}}"
           state: absent
-      when: '(delete|length > 1) and (delete_exists.stdout_lines > 1)'
+      when: '(delete_exists.stdout_lines > 1)'
