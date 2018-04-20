@@ -44,7 +44,7 @@
         msg: "{{old_files}}"
   - block:
     - name: Compressing Files Older Than 60 Days
-      shell: gzip {{old_files}}
+      shell: find /home/ -iname "*" -atime +60 -type f | grep -v "*gz" | xargs gzip
     rescue:
      - debug:
          msg: "Unable to complete compression" 
