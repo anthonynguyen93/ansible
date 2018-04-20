@@ -57,7 +57,7 @@
         shell: /usr/bin/ls -l {{delete}} | wc -l
         register: delete_exists
       - debug:
-          msg: "{{delete_exists.stdout.lines}}"
+          msg: "{{delete_exists.stdout_lines}}"
     - block: 
       - name: Perform Delete Operation..
         file: 
