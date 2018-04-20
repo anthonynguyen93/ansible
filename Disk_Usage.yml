@@ -38,7 +38,7 @@
     when: 'compress|length > 1'
   - block: 
     - name: Analyzing Files Older Than 60 Days
-      shell: find /home/ -iname "*" -atime +60 -type f | grep -v "*gz"
+      shell: find /home/ -iname "*" -atime +60 -type f | grep -v "gz"
       register: old_files
     - debug: 
         msg: "{{old_files.stdout_lines}}"
