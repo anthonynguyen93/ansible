@@ -27,7 +27,7 @@
         msg: "{{du_info.stdout_lines}}"
     when: 'directory_file_info|length > 1'
   - block:
-    - name: Checking for GZIP Compression..
+    - name: User input GZIP Compression..
       shell: gzip -r {{compress}}
       ignore_errors: yes
     - name: Display GZIP Compression
@@ -41,7 +41,7 @@
       shell: find /home/ -iname "*" -atime +60 -type f | grep -v "*gz"
       register: old_files
     - debug: 
-        msg: "{{old_files}}"
+        msg: "{{old_files.stdout_lines}}"
   - block:
     - name: Compressing Files Older Than 60 Days
       shell: find /home/ -iname "*" -atime +60 -type f | grep -v "*gz" | xargs gzip
