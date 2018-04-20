@@ -36,6 +36,18 @@
     - debug:
         msg: "{{gzip_filesystem_changed.stdout_lines}}"
     when: 'compress|length > 1'
+  - block: 
+    - name: Analyzing Files Older Than 60 Days
+      shell: find /home/ -iname "*" -atime +60 -type f
+      register: old_files
+    - debug: 
+        msg: {{old_files}}
+  - block:
+    - name: Compressing Files Older Than 60 Days
+      shell: grep -v "*gz" {{old_files}} | xargs gzip
+    rescue:
+     - debug:
+         msg: "Unable to complete compression" 
   - block:
     - block:
       - name: Checking if file / directory exists..
