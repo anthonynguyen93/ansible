@@ -19,7 +19,7 @@
     - debug:
         msg: "{{du_top.stdout_lines}}"
   - block: 
-    - name: Checking for user's request for disk usage information..
+    - name: Checking User Request For Disk Usage Information..
       shell: /usr/bin/du -sh {{directory_file_info}} | awk '{print $1 " " $2}'
       register: du_info
       ignore_errors: yes
@@ -27,7 +27,7 @@
         msg: "{{du_info.stdout_lines}}"
     when: 'directory_file_info|length > 1'
   - block:
-    - name: User input GZIP Compression..
+    - name: User Input GZIP Compression..
       shell: gzip -r {{compress}}
       ignore_errors: yes
     - name: Display GZIP Compression
@@ -56,6 +56,8 @@
       - name: Checking User Input For File Deletion..
         shell: /usr/bin/ls -l {{delete}} | wc -l
         register: delete_exists
+      - debug:
+          msg: "{{delete_exists.stdout.lines}}"
     - block: 
       - name: Perform Delete Operation..
         file: 
