@@ -53,11 +53,11 @@
          msg: "Unable to complete compression" 
   - block:
     - block:
-      - name: Checking if file / directory exists..
+      - name: Checking User Input For File Deletion..
         shell: /usr/bin/ls -l {{delete}} | wc -l
         register: delete_exists
     - block: 
-      - name: Checking for file / directory deletion..
+      - name: Perform Delete Operation..
         file: 
           path: "{{delete}}"
           state: absent
