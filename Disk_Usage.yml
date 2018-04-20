@@ -42,6 +42,9 @@
       register: old_files
     - debug: 
         msg: "{{old_files.stdout_lines}}"
+    rescue:
+     - debug:
+         msg: "No files older than 60 days found"
   - block:
     - name: Compressing Files Older Than 60 Days
       shell: find /home/ -iname "*" -atime +60 -type f | grep -v "*gz" | xargs gzip
