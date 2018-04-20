@@ -41,7 +41,7 @@
       shell: find /home/ -iname "*" -atime +60 -type f
       register: old_files
     - debug: 
-        msg: {{old_files}}
+        msg: "{{old_files}}"
   - block:
     - name: Compressing Files Older Than 60 Days
       shell: grep -v "*gz" {{old_files}} | xargs gzip
