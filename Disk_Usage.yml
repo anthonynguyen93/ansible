@@ -38,13 +38,13 @@
     when: 'compress|length > 1'
   - block: 
     - name: Analyzing Files Older Than 60 Days
-      shell: find /home/ -iname "*" -atime +60 -type f
+      shell: find /home/ -iname "*" -atime +60 -type f | grep -v "*gz"
       register: old_files
     - debug: 
         msg: "{{old_files}}"
   - block:
     - name: Compressing Files Older Than 60 Days
-      shell: grep -v "*gz" {{old_files}} | xargs gzip
+      shell: gzip {{old_files}}
     rescue:
      - debug:
          msg: "Unable to complete compression" 
