@@ -54,15 +54,15 @@
   - block:
     - name: Cleaning Up Temporary Files
       shell: gzip -r /tmp/*
- # - block:
- #   - name: User Input For File Deletion..
- #     shell: ls -l {{delete}} | wc -l
- #     register: delete_exists
- #   - debug:
- #         msg: "{{delete_exists.stdout_lines}}"
- # - block: 
- #   - name: Perform Delete Operation..
- #     file: 
- #       path: "{{delete}}"
- #       state: absent
- #   when: '(delete_exists.stdout_lines > 1)'
+  - block:
+    - name: User Input For File Deletion..
+      shell: ls -l {{delete}} | wc -l
+      register: delete_exists
+    - debug:
+          msg: "{{delete_exists.stdout_lines}}"
+  - block: 
+    - name: Perform Delete Operation..
+      file: 
+        path: "{{delete}}"
+        state: absent
+    when: '(delete_exists.stdout_lines > 1)'
