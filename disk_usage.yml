@@ -4,28 +4,28 @@
   become_user: root
   become: true
   tasks:
-  - block:
-    - name: Analyzing TOP Disk Usage
-      shell: /usr/bin/du -sh /* 2>/dev/null | sort -rn | awk '{print $1 " " $2}'
-      register: du
-      ignore_errors: yes
-    - debug:
-        msg: "{{du.stdout_lines}}"
-  - block: 
-    - name: Analyzing TOP 3 Highest FileSystem Consumers
-      shell: /usr/bin/du -sh /* 2>/dev/null | sort -rn | head -n 3 | awk '{print $1 " " $2}'
-      register: du_top
-      ignore_errors: yes
-    - debug:
-        msg: "{{du_top.stdout_lines}}"
-  - block: 
-    - name: Checking User Request For Disk Usage Information..
-      shell: /usr/bin/du -sh {{directory_file_info}} | awk '{print $1 " " $2}'
-      register: du_info
-      ignore_errors: yes
-    - debug:
-        msg: "{{du_info.stdout_lines}}"
-    when: 'directory_file_info|length > 1'
+#  - block:
+#    - name: Analyzing TOP Disk Usage
+#      shell: /usr/bin/du -sh /* 2>/dev/null | sort -rn | awk '{print $1 " " $2}'
+#      register: du
+#      ignore_errors: yes
+#    - debug:
+#        msg: "{{du.stdout_lines}}"
+#  - block: 
+#    - name: Analyzing TOP 3 Highest FileSystem Consumers
+#      shell: /usr/bin/du -sh /* 2>/dev/null | sort -rn | head -n 3 | awk '{print $1 " " $2}'
+#      register: du_top
+#      ignore_errors: yes
+#    - debug:
+#        msg: "{{du_top.stdout_lines}}"
+#  - block: 
+#    - name: Checking User Request For Disk Usage Information..
+#      shell: /usr/bin/du -sh {{directory_file_info}} | awk '{print $1 " " $2}'
+#      register: du_info
+#      ignore_errors: yes
+#    - debug:
+#        msg: "{{du_info.stdout_lines}}"
+#    when: 'directory_file_info|length > 1'
   - block:
     - name: User Input GZIP Compression..
       shell: gzip -r {{compress}}

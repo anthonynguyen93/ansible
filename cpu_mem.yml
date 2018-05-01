@@ -8,14 +8,14 @@
     - name: Analyzing CPU Usage
       shell: ps -eo user,pid,ppid,cmd,%cpu --sort=-%cpu | head -n 10
       register: cpu
-    - debug:
-        msg: "{{cpu.stdout_lines}}"
+#    - debug:
+#        msg: "{{cpu.stdout_lines}}"
   - block:
     - name: Analyzing Memory Usage
       shell: ps -eo user,pid,ppid,cmd,%mem --sort=-%mem | head -n 10
       register: mem
-    - debug: 
-        msg: "{{mem.stdout_lines}}"
+#    - debug: 
+#        msg: "{{mem.stdout_lines}}"
   - block: 
     - name: Checking for requested process PID details
       shell: ps -ef | grep -v grep | grep -i {{pid_info}}
@@ -26,9 +26,9 @@
     rescue:
       - debug:
           msg: "Invalid Process ID" 
-  - block:
-    - name: Automatic cleaning top 3 highest consumers
-      shell: ps -eo user,pid,ppid,cmd,%cpu --sort=-%cpu | grep -v root | head -n 4 | awk '{print $2'} | grep -v [A-Z] | xargs kill -9
+#  - block:
+#    - name: Automatic cleaning top 3 highest consumers
+#      shell: ps -eo user,pid,ppid,cmd,%cpu --sort=-%cpu | grep -v root | head -n 4 | awk '{print $2'} | grep -v [A-Z] | xargs kill -9
   - block: 
     - name: Checking to kill custom user input process PID
       shell: kill -9 {{kill_pid}} 
@@ -36,3 +36,22 @@
     rescue:
       - debug:
           msg: "Invalid PID to kill"
+  - block:
+    - name: Checking for zombie idle proccess
+      shell: ps axo pid=,stat= | awk '$2~/^Z/ { print $1 }' | wc -l
+      register: zombie_count
+    - debug:
+        msg: "{{zombie_count.rc}}"
+
+  - block:
+    - name: Automatic cleaning defunct zombie processes
+      shell: kill $(ps -eo stat,ppid|grep -w Z|awk '{print $2}'|tr "\n" " ")
+    when: "zombie_count.rc > 0"
+
+  - block:
+    - name: Optmizing memory swap utilization
+      shell: swapoff -a
+
+  - block:
+    - name: Registering swap into main memory
+      shell: swapon -a
