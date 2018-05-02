@@ -1,0 +1,157 @@
+#Anthony Nguyen
+- name: Check FS Usage
+  hosts: all
+  become_user: root
+  become: true
+  tasks:
+#  - name: set facts on valid inventory
+#    set_fact:
+#      AaaS_Status_Code: "SUCCESS"
+#      AaaS_Status_Sub_Code: "SUCCESS_VALID_INVENTORY"
+#      AaaS_Message: "{{ gso_unix_source_host }} In Inventory List"
+#    when: gso_unix_source_host in groups['target_hosts']
+#    run_once: true
+#
+#  - name: set facts on invalid inventory
+#    set_fact:
+#      AaaS_Status_Code: "FAILURE"
+#      AaaS_Status_Sub_Code: "FAILED_INVALID_INVENTORY"
+#      AaaS_Message: "{{ gso_unix_source_host }} Not In Inventory List"
+#    when: gso_unix_source_host not in groups['target_hosts']
+#    run_once: true
+#
+#  - name: fail on invalid inventory
+#    fail:
+#     msg: "Source host not in inventory list. Please add Source Host to inventory"
+#    when: AaaS_Status_Code == "FAILURE"
+#    run_once: true
+
+  - block:
+     - name: get user info
+       getent:
+         database: passwd
+         key: "{{ gso_unix_source_username }}"
+       run_once: true
+
+     - name: set task specific fact variable
+       set_fact:
+          gso_unix_homedir: "{{ getent_passwd[gso_unix_source_username][4] }}"
+          gso_unix_pubkey_path: "{{ getent_passwd[gso_unix_source_username][4] }}/.ssh/id_rsa"
+       run_once: true
+     - debug:
+         var: gso_unix_pubkey_path
+
+     - name: set facts on valid user
+       set_fact:
+          AaaS_Status_Code: "SUCCESS"
+          AaaS_Status_Sub_Code: "SUCCESS_VALID_USER"
+          AaaS_Message: "{{ gso_unix_source_username }} Valid User"
+       run_once: true
+
+     - name: check public key file
+       stat:
+         path: "{{ gso_unix_pubkey_path }}"
+       register: gso_unix_stat_result
+       run_once: true
+
+     ## 'generate' & 'generate copy' option when no key found ##
+     - block:
+
+       - block:
+         - name: generate keypair
+           command: ssh-keygen -t rsa -f {{ gso_unix_pubkey_path }} -q -N ""
+           args:
+             creates: /{{ gso_unix_target_username }}/.ssh/id_rsa
+           run_once: true
+         rescue:
+         - debug:
+             msg: "Unable to generate key"
+         when: (gso_unix_option|lower == "generate key")
+
+       - block:
+         - name: generate key for 'generate and copy key' option
+           command: su - {{ gso_unix_source_username }} -c 'ssh-keygen -t rsa -f {{ gso_unix_pubkey_path }} -q -N ""'
+           #command: ssh-keygen -t rsa -f {{ gso_unix_pubkey_path }} -q -N ""
+           args:
+             creates: /{{ gso_unix_target_username }}/.ssh/id_rsa
+           run_once: true
+         rescue:
+         - debug:
+             msg: "Unable to generate key"
+         when: (gso_unix_option|lower == "generate-copy key")
+
+       when: (gso_unix_stat_result.stat.exists == false)
+
+
+     ## fail 'generate' option when key already exist ##
+     - block:
+       - name: fail on generating existing key
+         fail:
+          msg: "Unable to generate key. Existing key in place: {{gso_unix_pubkey_path}}"
+         run_once: true
+       - name: set facts on fail generating for existing key
+         set_fact:
+            AaaS_Status_Code: "FAILURE"
+            AaaS_Status_Sub_Code: "FAILED_KEY_EXIST"
+            AaaS_Message: "{{ gso_unix_source_username }} Key Already Exist"
+         run_once: true
+       when: (gso_unix_stat_result.stat.exists == true and gso_unix_option|lower == "generate key")
+
+
+     ## 'copy copy' option ##
+     - block:
+       - name: copy copy option
+         command: cat {{ gso_unix_public_key_path }}
+         register: gso_unix_public_key_copy
+       when: gso_unix_option|lower == "copy-copy key"
+       run_once: true
+     - block:
+       - name: set copy-copy public key
+         set_fact:
+           gso_unix_pubkey_path: "{{gso_unix_public_key_path}}"
+       when: gso_unix_option|lower == "copy-copy key"
+       run_once: true
+
+
+     - block:
+       - name: set public key
+         command: cat {{ gso_unix_pubkey_path }}.pub
+         register: gso_unix_rsa_pub_key
+         run_once: true
+       rescue:
+       - debug:
+           msg: "User does not have keys setup"
+    rescue:
+     - name: set facts on invalid source user
+       set_fact:
+         AaaS_Status_Code: "FAILURE"
+         AaaS_Status_Sub_Code: "FAILED_NOT_VALID_USER"
+         AaaS_Message: "{{ gso_unix_source_username }} Not Valid User"
+       run_once: true
+
+
+    delegate_to: "{{ gso_unix_source_host }}"
+
+  - block:
+
+    - name: set authorized key
+      authorized_key:
+        user: "{{ gso_unix_target_username }}"
+        state: present
+        key: "{{ gso_unix_rsa_pub_key.stdout }}"
+    - debug:
+        msg: " {{ gso_unix_rsa_pub_key.stdout }} "
+
+    - name: set facts on valid key
+      set_fact:
+       AaaS_Status_Code: "SUCCESS"
+       AaaS_Status_Sub_Code: "SUCCESS_VALID_KEYS"
+       AaaS_Message: "{{ gso_unix_source_username }} Valid User Keys"
+
+    rescue:
+     - name: set facts on invalid target user
+       set_fact:
+        AaaS_Status_Code: "FAILURE"
+        AaaS_Status_Sub_Code: "FAILED_NOT_VALID_USER"
+        AaaS_Message: "{{ gso_unix_target_username }} Not Valid User"
+    when: inventory_hostname != gso_unix_source_host
