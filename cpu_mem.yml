@@ -38,15 +38,15 @@
           msg: "Invalid PID to kill"
   - block:
     - name: Checking for zombie idle proccess
-      shell: ps axo pid=,stat= | awk '$2~/^Z/ { print $1 }' | wc -l
+      shell: ps -eo stat,ppid|grep -w Z|awk '{print $2}' | wc -l
       register: zombie_count
     - debug:
-        msg: "{{zombie_count.rc}}"
+        msg: "{{zombie_count.stdout}}"
 
   - block:
     - name: Automatic cleaning defunct zombie processes
       shell: kill $(ps -eo stat,ppid|grep -w Z|awk '{print $2}'|tr "\n" " ")
-    when: "zombie_count.rc > 0"
+    when: zombie_count.stdout  > '1'
 
   - block:
     - name: Optmizing memory swap utilization
