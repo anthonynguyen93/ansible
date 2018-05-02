@@ -154,4 +154,4 @@
         AaaS_Status_Code: "FAILURE"
         AaaS_Status_Sub_Code: "FAILED_NOT_VALID_USER"
         AaaS_Message: "{{ gso_unix_target_username }} Not Valid User"
-    when: inventory_hostname != gso_unix_source_host
+#    when: inventory_hostname != gso_unix_source_host
