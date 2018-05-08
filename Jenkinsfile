@@ -21,7 +21,7 @@ node {
   
   stage ('Unit Tests'){
   dir('./ansible') {
-    sh '/bin/sh -xe ./ansible_test.sh'
+ //   sh '/bin/sh -xe ./ansible_test.sh'
     }
   }
 
